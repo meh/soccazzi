@@ -15,20 +15,28 @@ defmodule Soccazzi do
     quote do
       @behaviour Soccazzi
 
-      def start(options // []) do
+      def start do
+        start(nil, [])
+      end
+
+      def start(options) do
+        start(nil, options)
+      end
+
+      def start(state, options) do
         port   = Keyword.get(options, :port, 80)
-        socket = Socket.Web.listen!(port)
+        socket = Socket.Web.listen!(port, options)
 
         if options[:acceptors] do
           Enum.map 1 .. options[:acceptors], fn _ ->
-            spawn __MODULE__, :acceptor, [socket, options[:state]]
+            spawn __MODULE__, :acceptor, [socket, state]
           end
         else
-          spawn __MODULE__, :acceptor, [socket, options[:state]]
+          spawn __MODULE__, :acceptor, [socket, state]
         end
       end
 
-      defoverridable start: 1
+      defoverridable start: 0, start: 1, start: 2
 
       def acceptor(socket, state) do
         case socket.accept verify: function(verify/1) do
