@@ -13,18 +13,6 @@ Example
 defmodule Test do
   use Soccazzi
 
-  def start(options) when is_list(options) do
-    super(options)
-  end
-
-  def start(id) do
-    start(id, [])
-  end
-
-  def start(id, options) do
-    start(Keyword.put(options, :state, id))
-  end
-
   def connect(sock, table) do
     :ets.insert(table, { sock.remote!, sock })
 
