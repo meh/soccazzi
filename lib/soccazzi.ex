@@ -97,6 +97,7 @@ defmodule Soccazzi do
       end
 
       def close(socket, reason) do
+        socket.close(reason, wait: false)
       end
 
       ## defaults
